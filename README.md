@@ -17,10 +17,19 @@ npm install
 npm start
 ```
 
-### Build Prod Version
+### Build/Release Prod Version
 
 ```
 npm run build
+
+# Deploy to gh-pages branch
+./deploy.sh 
+```
+
+### Test
+
+```
+npm run test
 ```
 
 ### Features:
