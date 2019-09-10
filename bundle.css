@@ -1,0 +1,25 @@
+body {
+  color: #333;
+  background-color: #ccc;
+  height: 1000px; }
+
+body {
+  margin: 0px; }
+
+canvas {
+  display: inline-block;
+  vertical-align: baseline;
+  line-height: 0px;
+  font-size: 0px;
+  height: 600px;
+  width: 600px; }
+
+.layout {
+  display: flex; }
+
+.controls .control {
+  display: block;
+  margin: 1em; }
+
+
+/*# sourceMappingURL=bundle.css.map*/
