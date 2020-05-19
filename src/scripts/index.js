@@ -1,4 +1,4 @@
-import '../styles/index.scss';
+import '../styles/index.css';
 import { makeWorld, HEIGHT, WIDTH } from './world';
 import * as d3 from "d3";
 
@@ -57,10 +57,10 @@ function drawWorld(world, canvas) {
     }
 }
 
-function runSimulation(buildingCount, digCount, simulationCount) {
+function runSimulation(buildingInfo, digInfo, simulationCount) {
     let data = [];
     for (let i=0; i<simulationCount; i++) {
-        let world = makeWorld(buildingCount, digCount);
+        let world = makeWorld(buildingInfo, digInfo);
         data.push({
             structuresSeen: world.structuresSeen()
         });
@@ -117,29 +117,53 @@ function runSimulation(buildingCount, digCount, simulationCount) {
 
 }
 
+
 function init() {
     let world;
     let canvas = document.getElementById("canvas");
     let structuresSeenOutput = document.getElementById("structures-seen-output");
 
     function regenerateFromInputs() {
-        world = makeWorld(buildingCountInput.value, digCountInput.value);
+        world = makeWorld(getBuildingInfo(), getDigInfo());
         drawWorld(world, canvas);
         structuresSeenOutput.innerText = world.structuresSeen();
     }
 
-    let buildingCountInput = document.getElementById("building-count-input");
-    buildingCountInput.value = 10;
-    buildingCountInput.addEventListener("change", regenerateFromInputs);
-    let digCountInput = document.getElementById("dig-count-input");
-    digCountInput.value = 5;
-    digCountInput.addEventListener("change", regenerateFromInputs);
+    function initializeInput(inputId, defaultValue) {
+        let input = document.getElementById(inputId);
+        input.value = defaultValue;
+        input.addEventListener("change", regenerateFromInputs);
+        return input;
+    }
+
+    function getBuildingInfo() {
+        return {
+            count: parseInt(buildingCountInput.value, 10),
+            width: parseInt(buildingWidthInput.value, 10),
+            height: parseInt(buildingHeightInput.value, 10),
+        };
+    }
+
+    function getDigInfo() {
+        return {
+            count: parseInt(digCountInput.value, 10),
+            width: parseInt(digWidthInput.value, 10),
+            height: parseInt(digHeightInput.value, 10),
+        };
+    }
+
+    let buildingCountInput = initializeInput("building-count-input", 10);
+    let buildingWidthInput = initializeInput("building-width-input", 4);
+    let buildingHeightInput = initializeInput("building-height-input", 3);
+    let digCountInput = initializeInput("dig-count-input", 5);
+    let digWidthInput = initializeInput("dig-width-input", 4);
+    let digHeightInput = initializeInput("dig-height-input", 4);
     let simulationCountInput = document.getElementById("simulation-count-input");
     let regenerateButton = document.getElementById("regenerate-button");
     regenerateButton.addEventListener("click", regenerateFromInputs);
     let simulateButton = document.getElementById("simulate-button");
     simulateButton.addEventListener("click", () => {
-        runSimulation(buildingCountInput.value, digCountInput.value, simulationCountInput.value);
+        runSimulation(getBuildingInfo(), getDigInfo(), simulationCountInput.value);
     });
 }
 

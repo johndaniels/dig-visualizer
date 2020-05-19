@@ -6,6 +6,7 @@ const HEIGHT=100;
 
 function randomRect(width, height) {
     let rect;
+    let tries = 0;
     do {
         // For now we will choose x and y uniformly from within the world,
         // set rotation, and then see if that is in bounds, and repeat
@@ -13,6 +14,11 @@ function randomRect(width, height) {
         let x = Math.random() * WIDTH;
         let y = Math.random() * HEIGHT;
         rect = rectangle(x, y, width, height, rotation);
+        tries += 1;
+        if (tries > 10) {
+            alert("Cannot generate world. Too many entities or entities are too big");
+            throw new Error();
+        }
     } while (!inBounds(rect, WIDTH, HEIGHT));
     return rect;
 }
@@ -23,10 +29,10 @@ function intersectsAny(shape, otherEntities) {
     );
 }
 
-function randomDig(previousDigs) {
+function randomDig(previousDigs, width, height) {
     let shape;
     do {
-        shape = randomRect(4, 4);
+        shape = randomRect(width, height);
     } while (intersectsAny(shape, previousDigs));
     return {
         entityType: "dig",
@@ -34,10 +40,10 @@ function randomDig(previousDigs) {
     };
 }
 
-function randomBuilding(previousBuildings) {
+function randomBuilding(previousBuildings, width, height) {
     let shape;
     do {
-        shape = randomRect(4, 3);
+        shape = randomRect(width, height);
     } while (intersectsAny(shape, previousBuildings));
     return {
         entityType: "building",
@@ -46,15 +52,15 @@ function randomBuilding(previousBuildings) {
 }
 
 class World {
-    constructor(buildingCount, digCount) {
+    constructor(buildingInfo, digInfo) {
         let digs = [];
-        for (let i=0; i<digCount; i++) {
-            digs.push(randomDig(digs));
+        for (let i=0; i<digInfo.count; i++) {
+            digs.push(randomDig(digs, digInfo.width, digInfo.height));
         }
 
         let buildings = [];
-        for (let i=0; i<buildingCount; i++) {
-            buildings.push(randomBuilding(buildings));
+        for (let i=0; i<buildingInfo.count; i++) {
+            buildings.push(randomBuilding(buildings, buildingInfo.width, buildingInfo.height));
         }
         this.digs = digs;
         this.buildings = buildings;
@@ -73,8 +79,9 @@ class World {
     }
 }
 
-function makeWorld(buildingCount, digCount) {
-    return new World(buildingCount, digCount);
+function makeWorld(buildingInfo, digInfo) {
+    console.log(buildingInfo, digInfo);
+    return new World(buildingInfo, digInfo);
 }
 
 export {
