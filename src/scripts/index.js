@@ -139,16 +139,16 @@ function init() {
     function getBuildingInfo() {
         return {
             count: parseInt(buildingCountInput.value, 10),
-            width: parseInt(buildingWidthInput.value, 10),
-            height: parseInt(buildingHeightInput.value, 10),
+            width: parseFloat(buildingWidthInput.value),
+            height: parseFloat(buildingHeightInput.value),
         };
     }
 
     function getDigInfo() {
         return {
             count: parseInt(digCountInput.value, 10),
-            width: parseInt(digWidthInput.value, 10),
-            height: parseInt(digHeightInput.value, 10),
+            width: parseFloat(digWidthInput.value),
+            height: parseFloat(digHeightInput.value),
         };
     }
 
