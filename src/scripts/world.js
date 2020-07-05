@@ -4,13 +4,13 @@ import { tsConstructorType } from '@babel/types';
 const WIDTH=100;
 const HEIGHT=100;
 
-function randomRect(width, height) {
+function randomRect(width, height, lockRotation) {
     let rect;
     let tries = 0;
     do {
         // For now we will choose x and y uniformly from within the world,
         // set rotation, and then see if that is in bounds, and repeat
-        let rotation = Math.random() * 2 * Math.PI;
+        let rotation = lockRotation ? 0 : Math.random() * 2 * Math.PI;
         let x = Math.random() * WIDTH;
         let y = Math.random() * HEIGHT;
         rect = rectangle(x, y, width, height, rotation);
@@ -29,13 +29,13 @@ function intersectsAny(shape, otherEntities) {
     );
 }
 
-function randomDig(previousDigs, width, height) {
+function randomTestUnit(previousTestUnits, width, height, lockRotation) {
     let shape;
     do {
-        shape = randomRect(width, height);
-    } while (intersectsAny(shape, previousDigs));
+        shape = randomRect(width, height,lockRotation);
+    } while (intersectsAny(shape, previousTestUnits));
     return {
-        entityType: "dig",
+        entityType: "testUnit",
         shape,
     };
 }
@@ -52,17 +52,17 @@ function randomBuilding(previousBuildings, width, height) {
 }
 
 class World {
-    constructor(buildingInfo, digInfo) {
-        let digs = [];
-        for (let i=0; i<digInfo.count; i++) {
-            digs.push(randomDig(digs, digInfo.width, digInfo.height));
+    constructor(buildingInfo, testUnitInfo) {
+        let testUnits = [];
+        for (let i=0; i<testUnitInfo.count; i++) {
+            testUnits.push(randomTestUnit(testUnits, testUnitInfo.width, testUnitInfo.height, testUnitInfo.lockRotation));
         }
 
         let buildings = [];
         for (let i=0; i<buildingInfo.count; i++) {
             buildings.push(randomBuilding(buildings, buildingInfo.width, buildingInfo.height));
         }
-        this.digs = digs;
+        this.testUnits = testUnits;
         this.buildings = buildings;
         this.width = WIDTH;
         this.height = HEIGHT;
@@ -71,7 +71,7 @@ class World {
     structuresSeen() {
         let total = 0;
         for (let building of this.buildings) {
-            if (intersectsAny(building.shape, this.digs)) {
+            if (intersectsAny(building.shape, this.testUnits)) {
                 total += 1;
             }
         }
@@ -79,9 +79,9 @@ class World {
     }
 }
 
-function makeWorld(buildingInfo, digInfo) {
-    console.log(buildingInfo, digInfo);
-    return new World(buildingInfo, digInfo);
+function makeWorld(buildingInfo, testUnitInfo) {
+    console.log(buildingInfo, testUnitInfo);
+    return new World(buildingInfo, testUnitInfo);
 }
 
 export {

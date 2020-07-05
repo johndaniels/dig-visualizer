@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>webpack starterkit</title>
+  <title>Dig Visualizer</title>
 </head>
 <body>
   <div class="layout">
@@ -26,25 +26,31 @@
           <input type="number" step="any" id="building-height-input">
         </label>
       </div>
-      <h4>Digs</h4>
+      <h4>Test Units</h4>
       <div class="control">
-        <label for="dig-count-input">
+        <label for="test-unit-count-input">
           Count:
-          <input type="number" id="dig-count-input">
+          <input type="number" id="test-unit-count-input">
         </label>
       </div>
       <div class="control">
-        <label for="dig-width-input">
+        <label for="test-unit-width-input">
           Width:
-          <input type="number" step="any" id="dig-width-input">
+          <input type="number" step="any" id="test-unit-width-input">
         </label>
-        <label for="dig-height-input">
+        <label for="test-unit-height-input">
           Height:
-          <input type="number" step="any" id="dig-height-input">
+          <input type="number" step="any" id="test-unit-height-input">
         </label>
       </div>
       <div class="control">
-        <button id="regenerate-button">Regenerate</button>
+        <label for="test-unit-count-input">
+          Lock Rotation:
+          <input type="checkbox" id="test-unit-lock-rotation-input">
+        </label>
+      </div>
+      <div class="control">
+        <button id="regenerate-button">Visualize</button>
       </div>
       <div class="output">
           Structures Seen <span id="structures-seen-output"></span>
@@ -58,8 +64,11 @@
       <div class="control">
         <button id="simulate-button">Simulate</button>
       </div>
-      
-      <div id="histogram" class="histogram">
+      <div id="simulation-results">
+        <div id="simulation-table" class="simulation-table">
+        </div>
+        <div id="histogram" class="histogram">
+        </div>
       </div>
     </div>
   </div>

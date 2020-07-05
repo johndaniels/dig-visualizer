@@ -26,3 +26,7 @@ canvas {
   display: block;
   margin: 1em;
 }
+
+#simulation-results {
+  display: flex;
+}

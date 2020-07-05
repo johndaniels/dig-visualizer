@@ -3,7 +3,7 @@ import { makeWorld, HEIGHT, WIDTH } from './world';
 import * as d3 from "d3";
 
 let shapes = [];
-let digs = [];
+let testUnits = [];
 
 const CANVAS_WIDTH = 600;
 const CANVAS_HEIGHT = 600;
@@ -27,7 +27,7 @@ function worldToCanvas(p) {
 }
 
 function drawEntity(ctx, entity) {
-    if (entity.entityType == 'dig') {
+    if (entity.entityType == 'testUnit') {
         ctx.fillStyle = "#FF0000";
     } else {
         ctx.fillStyle = "#0000FF";
@@ -52,19 +52,49 @@ function drawWorld(world, canvas) {
         drawEntity(ctx, building);
     }
 
-    for (let dig of world.digs) {
-        drawEntity(ctx, dig);
+    for (let testUnit of world.testUnits) {
+        drawEntity(ctx, testUnit);
     }
 }
 
-function runSimulation(buildingInfo, digInfo, simulationCount) {
+function buildTable(data) {
+    let parent = document.getElementById("simulation-table");
+    let table = document.createElement("table");
+    let tbody = document.createElement("tbody");
+    table.appendChild(tbody);
+    let frequencies = Array(11).fill(0);
+    for (let item of data) {
+        if (item.structuresSeen < 11) {
+            frequencies[item.structuresSeen] += 1;
+        }
+    }
+    let header = document.createElement("tr");
+    header.innerHTML = "<th>Buildings Seen</th><th>Frequency</th>";
+    tbody.appendChild(header);
+    for (let i=0; i<11; i++) {
+        let row = document.createElement("tr");
+        let countColumn = document.createElement("td");
+        countColumn.textContent = i;
+        let frequencyColumn = document.createElement("td");
+        frequencyColumn.textContent = frequencies[i];
+        row.appendChild(countColumn);
+        row.appendChild(frequencyColumn);
+        tbody.appendChild(row);
+    }
+    parent.innerHTML = '';
+    parent.appendChild(table);
+
+}
+
+function runSimulation(buildingInfo, testUnitInfo, simulationCount) {
     let data = [];
     for (let i=0; i<simulationCount; i++) {
-        let world = makeWorld(buildingInfo, digInfo);
+        let world = makeWorld(buildingInfo, testUnitInfo);
         data.push({
             structuresSeen: world.structuresSeen()
         });
     }
+    buildTable(data);
     // set the dimensions and margins of the graph
     var margin = {top: 10, right: 30, bottom: 30, left: 40},
         width = 460 - margin.left - margin.right,
@@ -124,7 +154,7 @@ function init() {
     let structuresSeenOutput = document.getElementById("structures-seen-output");
 
     function regenerateFromInputs() {
-        world = makeWorld(getBuildingInfo(), getDigInfo());
+        world = makeWorld(getBuildingInfo(), getTestUnitInfo());
         drawWorld(world, canvas);
         structuresSeenOutput.innerText = world.structuresSeen();
     }
@@ -144,26 +174,28 @@ function init() {
         };
     }
 
-    function getDigInfo() {
+    function getTestUnitInfo() {
         return {
-            count: parseInt(digCountInput.value, 10),
-            width: parseFloat(digWidthInput.value),
-            height: parseFloat(digHeightInput.value),
+            count: parseInt(testUnitCountInput.value, 10),
+            width: parseFloat(testUnitWidthInput.value),
+            height: parseFloat(testUnitHeightInput.value),
+            lockRotation: testUnitLockRotationInput.checked,
         };
     }
 
     let buildingCountInput = initializeInput("building-count-input", 10);
     let buildingWidthInput = initializeInput("building-width-input", 4);
     let buildingHeightInput = initializeInput("building-height-input", 3);
-    let digCountInput = initializeInput("dig-count-input", 5);
-    let digWidthInput = initializeInput("dig-width-input", 4);
-    let digHeightInput = initializeInput("dig-height-input", 4);
+    let testUnitCountInput = initializeInput("test-unit-count-input", 5);
+    let testUnitWidthInput = initializeInput("test-unit-width-input", 4);
+    let testUnitHeightInput = initializeInput("test-unit-height-input", 4);
+    let testUnitLockRotationInput = document.getElementById("test-unit-lock-rotation-input");
     let simulationCountInput = document.getElementById("simulation-count-input");
     let regenerateButton = document.getElementById("regenerate-button");
     regenerateButton.addEventListener("click", regenerateFromInputs);
     let simulateButton = document.getElementById("simulate-button");
     simulateButton.addEventListener("click", () => {
-        runSimulation(getBuildingInfo(), getDigInfo(), simulationCountInput.value);
+        runSimulation(getBuildingInfo(), getTestUnitInfo(), simulationCountInput.value);
     });
 }
 
