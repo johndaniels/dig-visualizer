@@ -27,4 +27,8 @@ canvas {
   margin: 1em;
 }
 
+#simulation-results {
+  display: flex;
+}
+
 /*# sourceMappingURL=bundle.css.map*/
