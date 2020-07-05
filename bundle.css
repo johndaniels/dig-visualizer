@@ -31,4 +31,8 @@ canvas {
   display: flex;
 }
 
+#simulation-table table {
+  border-spacing: 10px 2px;
+}
+
 /*# sourceMappingURL=bundle.css.map*/
