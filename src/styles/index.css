@@ -30,3 +30,7 @@ canvas {
 #simulation-results {
   display: flex;
 }
+
+#simulation-table table {
+  border-spacing: 10px 2px;
+}
